@@ -9,7 +9,12 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 /// </summary>
 public class PhotonManager : Photon.MonoBehaviour
 {
-    private string roomName = "";
+	private string ip = "127.0.0.1";
+	private string port = "5055";
+
+	private string version = "0.1";
+
+	private string roomName = "";
 	private string playerName = "";
 	private string friendName = "";
 
@@ -17,7 +22,7 @@ public class PhotonManager : Photon.MonoBehaviour
 	private string propValue = "";
 
 	private string masterName = "";
-	private string lobbyPropKey;
+	private string lobbyPropKey = "";
 
 	private List<FriendInfo> friendList = new List<FriendInfo>();
 	private List<string> propListInLobby = new List<string>();
@@ -39,85 +44,85 @@ public class PhotonManager : Photon.MonoBehaviour
 	/// <summary>
 	/// ロビーに入った際に呼ばれるイベントコールバック
 	/// </summary>
-    void OnJoinedLobby()
-    {
-        Debug.Log("[Callback]: OnPhotonJoiendLobby");
-        log += "[Callback]: OnPhotonJoiendLobby\n";
-    }
+	void OnJoinedLobby()
+	{
+		Debug.Log("[Callback]: OnPhotonJoiendLobby");
+		log += "[Callback]: OnPhotonJoiendLobby\n";
+	}
 
 	/// <summary>
 	/// ルームに入った際に呼ばれるイベントコールバック
 	/// </summary>
-    void OnJoinedRoom()
-    {
-        Debug.Log("[Callback]: OnPhotonJoiendRoom");
-        log += "[Callback]: OnPhotonJoiendRoom\n";
-    }
+	void OnJoinedRoom()
+	{
+		Debug.Log("[Callback]: OnPhotonJoiendRoom");
+		log += "[Callback]: OnPhotonJoiendRoom\n";
+	}
 
 	/// <summary>
 	/// ルームから出た際に呼ばれるイベントコールバック
 	/// </summary>
-    void OnLeftRoom()
-    {
-        Debug.Log("[Callback]: OnLeftRoom");
-        log += "[Callback]: OnLeftRoom\n";
-    }
+	void OnLeftRoom()
+	{
+		Debug.Log("[Callback]: OnLeftRoom");
+		log += "[Callback]: OnLeftRoom\n";
+	}
 
 	/// <summary>
 	/// Photonから切断された際に呼ばれるイベントコールバック
 	/// </summary>
-    void OnDisconnectedFromPhoton()
-    {
-        Debug.Log("[Callback]: OnDisconnectedFromPhoton");
-        log += "[Callback]: OnDisconnectedFromPhoton\n";
-    }
+	void OnDisconnectedFromPhoton()
+	{
+		Debug.Log("[Callback]: OnDisconnectedFromPhoton");
+		log += "[Callback]: OnDisconnectedFromPhoton\n";
+	}
 
 	/// <summary>
 	/// ルームの入室に失敗した際に呼ばれるイベントコールバック
 	/// </summary>
 	/// <param name="codeAndMsg">Code and message.</param>
-    void OnPhotonJoinRoomFailed(object[] codeAndMsg)
-    {
-        Debug.Log("OnPhotonJoinRoomFailed");
-        log += "[Callback]: OnPhotonJoinRoomFailed\n";
-        int errorCode = (int)codeAndMsg[0];
-        Debug.Log(errorCode);
-        log += "[Error]: " + errorCode + "\n";
+	void OnPhotonJoinRoomFailed(object[] codeAndMsg)
+	{
+		Debug.Log("OnPhotonJoinRoomFailed");
+		log += "[Callback]: OnPhotonJoinRoomFailed\n";
+		int errorCode = (int)codeAndMsg[0];
+		Debug.Log(errorCode);
+		log += "[Error]: " + errorCode + "\n";
 
-    }
+	}
 
 	/// <summary>
 	/// JoinRandomRoomが失敗した際に呼ばれるイベントコールバック
 	/// </summary>
 	/// <param name="codeAndMsg">Code and message.</param>
-    void OnPhotonJoinRandomRoomFailed(object[] codeAndMsg)
-    {
-        Debug.Log("OnPhotonJoinRandomRoomFailed");
-        log += "[Callback]: OnPhotonJoinRandomRoomFailed\n";
-        int errorCode = (int)codeAndMsg[0];
-        Debug.Log(errorCode);
-    }
+	void OnPhotonJoinRandomRoomFailed(object[] codeAndMsg)
+	{
+		Debug.Log("OnPhotonJoinRandomRoomFailed");
+		log += "[Callback]: OnPhotonJoinRandomRoomFailed\n";
+		int errorCode = (int)codeAndMsg[0];
+		Debug.Log(errorCode);
+	}
 
 	/// <summary>
 	/// ルーム作成に失敗した際に呼ばれるイベントコールバック
 	/// </summary>
 	/// <param name="codeAndMsg">Code and message.</param>
-    void OnPhotonCreateRoomFailed(object[] codeAndMsg)
-    {
-        Debug.Log("OnPhotonCreateRoomFailed");
-        log += "[Callback]: OnPhotonCreateRoomFailed\n";
-        int errorCode = (int)codeAndMsg[0];
-        Debug.Log(errorCode);
-    }
+	void OnPhotonCreateRoomFailed(object[] codeAndMsg)
+	{
+		Debug.Log("OnPhotonCreateRoomFailed");
+		log += "[Callback]: OnPhotonCreateRoomFailed\n";
+		int errorCode = (int)codeAndMsg[0];
+		Debug.Log(errorCode);
+	}
 
 	/// <summary>
 	/// PhotonNetwork.Friendsが変更された際に呼ばれるイベントコールバック
 	/// </summary>
-    void OnUpdatedFriendList()
-    {
-        Debug.Log("OnUpdatedFriendList");
-        log += "[Callback]: OnUpdatedFriendList\n";
-    }
+	void OnUpdatedFriendList()
+	{
+		Debug.Log("OnUpdatedFriendList");
+		log += "[Callback]: OnUpdatedFriendList\n";
+	}
 
 	/// <summary>
 	/// プレイヤーのカスタムプロパティが変更された際に呼ばれるイベントコールバック
@@ -151,42 +156,64 @@ public class PhotonManager : Photon.MonoBehaviour
 		}
 	}
 
-    void OnGUI()
-    {
+	void OnGUI()
+	{
 
 		GUILayout.BeginArea(new Rect(0, 0, 400, 800));
 
 		// Photonのネットワーク状態
-        GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
+		GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
 
 		// プレイヤー名
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("プレイヤー名: ");
-        playerName = GUILayout.TextField(playerName);
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("プレイヤー名: ");
+		playerName = GUILayout.TextField(playerName);
 		PhotonNetwork.playerName = playerName;
-        GUILayout.EndHorizontal();
+		GUILayout.EndHorizontal();
 
-		// 接続管理
+		// プレイヤー名
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("バージョン: ");
+		version = GUILayout.TextField(version);
+		GUILayout.EndHorizontal();
+
+		// 接続管理（Photon Server）
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("IP: ");
+		ip = GUILayout.TextField(ip);
+		GUILayout.Label("Port: ");
+		port = GUILayout.TextField(port);
+		// Photonに接続
+		if (GUILayout.Button("Connect to Photon Server"))
+		{
+			PhotonNetwork.ConnectToMaster(ip, 5055, "", "0.1");
+
+			Debug.Log("[Method]: ConnectToMaster()");
+			log += "[Method]: ConnectToMaster\n";
+		}
+		GUILayout.EndHorizontal();
+
+		// 接続管理（Photon Cloud）
 		GUILayout.BeginHorizontal();
 		// Photonに接続
-        if (GUILayout.Button("Connect"))
-        {
+		if (GUILayout.Button("Connect to Photon Cloud"))
+		{
 			// WebSocketを使う場合はプロトコルを明示的に指定する
 			//PhotonNetwork.PhotonServerSettings.Protocol = ExitGames.Client.Photon.ConnectionProtocol.WebSocket; 
-            PhotonNetwork.ConnectUsingSettings("0.1");
+			PhotonNetwork.ConnectUsingSettings(version);
 
 			Debug.Log("[Method]: ConnectUsingSettings()");
 			log += "[Method]: ConnectUsingSettings\n";
 
-        }
+		}
 		// Photonから切断
-        if (GUILayout.Button("Disconnect"))
-        {
-            PhotonNetwork.Disconnect();
+		if (GUILayout.Button("Disconnect"))
+		{
+			PhotonNetwork.Disconnect();
 
 			Debug.Log("[Method]: Disconnect()");
 			log += "[Method]: Disconnect\n";
-        }
+		}
 		GUILayout.EndHorizontal();
 
 
@@ -211,51 +238,51 @@ public class PhotonManager : Photon.MonoBehaviour
 		GUILayout.EndHorizontal();
 
 		// ルーム名の入力
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("ルーム名");
-        roomName = GUILayout.TextField(roomName);
-        GUILayout.EndHorizontal();
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("ルーム名");
+		roomName = GUILayout.TextField(roomName);
+		GUILayout.EndHorizontal();
 
 		// ルーム作成
 		GUILayout.BeginHorizontal();
 		// ルーム名を指定いて作成
-        if (GUILayout.Button("CreateRoom"))
-        {
-            Debug.Log("[Method]: CreateRoom() :" + roomName);
-            log += "[Method]: CreateRoom : " + roomName + "\n";
+		if (GUILayout.Button("CreateRoom"))
+		{
+			Debug.Log("[Method]: CreateRoom() :" + roomName);
+			log += "[Method]: CreateRoom : " + roomName + "\n";
 
 			// カスタムプロパティを指定
-            Hashtable customRoomProperties = new Hashtable() { { "map", 1 } };
-            string[] customRoomPropertiesForLobby = { "map", "ai" };
+			Hashtable customRoomProperties = new Hashtable() { { "map", 1 } };
+			string[] customRoomPropertiesForLobby = { "map", "ai" };
 
 			// ルームオプションを指定して作成
-            PhotonNetwork.CreateRoom(roomName, new RoomOptions()
-            {
-                isVisible = false,
-                isOpen = true,
-                maxPlayers = 20,
-                customRoomProperties = customRoomProperties,
-                customRoomPropertiesForLobby = customRoomPropertiesForLobby
-            }, new TypedLobby());
+			PhotonNetwork.CreateRoom(roomName, new RoomOptions()
+				{
+					isVisible = false,
+					isOpen = true,
+					maxPlayers = 20,
+					customRoomProperties = customRoomProperties,
+					customRoomPropertiesForLobby = customRoomPropertiesForLobby
+				}, new TypedLobby());
 
 			Debug.Log ("ネットワークを切断します...");
-        }
+		}
 		// Room1としてルームを作成
-        if (GUILayout.Button("CreateRoom as Room1"))
-        {
-            Debug.Log("[Method]: CreateRoom() : Room1");
-            log += "[Method]: CreateRoom : Room1\n";
+		if (GUILayout.Button("CreateRoom as Room1"))
+		{
+			Debug.Log("[Method]: CreateRoom() : Room1");
+			log += "[Method]: CreateRoom : Room1\n";
 
 			PhotonNetwork.CreateRoom("Room1", new RoomOptions(), new TypedLobby());
-        }
+		}
 		// ルーム名を指定して作成、すでに存在する場合は入室
-        if (GUILayout.Button("JoinOrCreateRoom"))
-        {
-            Debug.Log("[Method]: JoinOrCreateRoom()");
-            log += "[Method]: JoinOrCreateRoom\n";
+		if (GUILayout.Button("JoinOrCreateRoom"))
+		{
+			Debug.Log("[Method]: JoinOrCreateRoom()");
+			log += "[Method]: JoinOrCreateRoom\n";
 
-            PhotonNetwork.JoinOrCreateRoom(roomName, new RoomOptions(), new TypedLobby());
-        }
+			PhotonNetwork.JoinOrCreateRoom(roomName, new RoomOptions(), new TypedLobby());
+		}
 		GUILayout.EndHorizontal();
 
 		// ルーム入退室
@@ -269,104 +296,104 @@ public class PhotonManager : Photon.MonoBehaviour
 			PhotonNetwork.JoinRoom (roomName);
 		}
 		// ランダムに入室
-        if (GUILayout.Button("JoinRandomRoom"))
-        {
-            Debug.Log("[Method]: JoinRandomRoom()");
-            log += "[Method]: JoinRandomRoom\n";
+		if (GUILayout.Button("JoinRandomRoom"))
+		{
+			Debug.Log("[Method]: JoinRandomRoom()");
+			log += "[Method]: JoinRandomRoom\n";
 
-            PhotonNetwork.JoinRandomRoom();
-        }
+			PhotonNetwork.JoinRandomRoom();
+		}
 		// ルームから退室
-        if (GUILayout.Button("LeaveRoom"))
-        {
-            Debug.Log("[Method]: LeaveRoom()");
-            log += "[Method]: LeaveRoom\n";
+		if (GUILayout.Button("LeaveRoom"))
+		{
+			Debug.Log("[Method]: LeaveRoom()");
+			log += "[Method]: LeaveRoom\n";
 
-            PhotonNetwork.LeaveRoom();
-        }
+			PhotonNetwork.LeaveRoom();
+		}
 		GUILayout.EndHorizontal();
 
 		// フレンド名を入力
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("登録するフレンド名: ");
-        friendName = GUILayout.TextField(friendName);
-        GUILayout.EndHorizontal();
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("登録するフレンド名: ");
+		friendName = GUILayout.TextField(friendName);
+		GUILayout.EndHorizontal();
 
-        // フレンド関係
+		// フレンド関係
 		GUILayout.BeginHorizontal();
 		// フレンドを登録
-        if (GUILayout.Button("SetFriendName"))
-        {
-            Debug.Log("[Method]: SetFriendName(): " + friendName + "をフレンド登録しました");
-            log += "[Method]: SetFriendName(): " + friendName + "をフレンド登録しました\n";
+		if (GUILayout.Button("SetFriendName"))
+		{
+			Debug.Log("[Method]: SetFriendName(): " + friendName + "をフレンド登録しました");
+			log += "[Method]: SetFriendName(): " + friendName + "をフレンド登録しました\n";
 
-            friendList.Add(new FriendInfo() { Name = friendName });
-            PhotonNetwork.Friends = friendList;
-            Debug.Log("test");
-        }
-        // フレンドリストの取得
-        if (GUILayout.Button("PhotonNetwork.Friends"))
-        {
-            Debug.Log("[Parameters]: PhotonNetwork.Friends");
-            log += "[Parameters]: PhotonNetwork.Friends\n";
+			friendList.Add(new FriendInfo() { Name = friendName });
+			PhotonNetwork.Friends = friendList;
+			Debug.Log("test");
+		}
+		// フレンドリストの取得
+		if (GUILayout.Button("PhotonNetwork.Friends"))
+		{
+			Debug.Log("[Parameters]: PhotonNetwork.Friends");
+			log += "[Parameters]: PhotonNetwork.Friends\n";
 
-            List<FriendInfo> friends = PhotonNetwork.Friends;
-            foreach (FriendInfo friend in friends)
-            {
-                Debug.Log("Name: " + friend.Name);
-                log += "Name: " + friend.Name + ", IsOnline: " + friend.IsOnline + "\n";
-            }
-        }
+			List<FriendInfo> friends = PhotonNetwork.Friends;
+			foreach (FriendInfo friend in friends)
+			{
+				Debug.Log("Name: " + friend.Name);
+				log += "Name: " + friend.Name + ", IsOnline: " + friend.IsOnline + "\n";
+			}
+		}
 		GUILayout.EndHorizontal();
 
 		// その他機能
 		GUILayout.BeginHorizontal();
-        // インスタンスの作成
-        if (GUILayout.Button("Instantiate"))
-        {
-            Debug.Log("[Method]: Instantiate()");
-            log += "[Method]: Instantiate\n";
+		// インスタンスの作成
+		if (GUILayout.Button("Instantiate"))
+		{
+			Debug.Log("[Method]: Instantiate()");
+			log += "[Method]: Instantiate\n";
 
-            PhotonNetwork.Instantiate("Cube", Vector3.zero, Quaternion.identity, 0);
-        }
+			PhotonNetwork.Instantiate("Cube", Vector3.zero, Quaternion.identity, 0);
+		}
 
-        // オフラインモードの設定
-        if (GUILayout.Button("Offline Mode"))
-        {
-            Debug.Log("[Parameters]: Offline Mode: " + !PhotonNetwork.offlineMode);
-            log += "[Parameters]: Offline Mode: " + !PhotonNetwork.offlineMode + "\n";
+		// オフラインモードの設定
+		if (GUILayout.Button("Offline Mode"))
+		{
+			Debug.Log("[Parameters]: Offline Mode: " + !PhotonNetwork.offlineMode);
+			log += "[Parameters]: Offline Mode: " + !PhotonNetwork.offlineMode + "\n";
 
-            PhotonNetwork.offlineMode = !PhotonNetwork.offlineMode;
-        }
+			PhotonNetwork.offlineMode = !PhotonNetwork.offlineMode;
+		}
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
-        // ルームリストの取得
-        if (GUILayout.Button("GetRoomList()"))
-        {
-            Debug.Log("[Method]: GetRoomList()");
-            log += "[Method]: GetRoomList()\n";
+		// ルームリストの取得
+		if (GUILayout.Button("GetRoomList()"))
+		{
+			Debug.Log("[Method]: GetRoomList()");
+			log += "[Method]: GetRoomList()\n";
 
-            RoomInfo[] roomList = PhotonNetwork.GetRoomList();
-            foreach (RoomInfo roomInfo in roomList)
-            {
-                Debug.Log("Name: " + roomInfo.name + " ,Open: " + roomInfo.open.ToString() + " ,Visible" + roomInfo.visible.ToString());
-                log += "Name: " + roomInfo.name + " ,Open: " + roomInfo.open.ToString() + " ,Visible" + roomInfo.visible.ToString() + "\n";
-            }
-        }
-        // プレイヤーリストの取得
-        if (GUILayout.Button("PhotonNetwork.playerList"))
-        {
-            Debug.Log("[Parameters]: PhotonNetwork.playerList");
-            log += "[Parameters]: PhotonNetwork.playerList\n";
+			RoomInfo[] roomList = PhotonNetwork.GetRoomList();
+			foreach (RoomInfo roomInfo in roomList)
+			{
+				Debug.Log("Name: " + roomInfo.name + " ,Open: " + roomInfo.open.ToString() + " ,Visible" + roomInfo.visible.ToString());
+				log += "Name: " + roomInfo.name + " ,Open: " + roomInfo.open.ToString() + " ,Visible" + roomInfo.visible.ToString() + "\n";
+			}
+		}
+		// プレイヤーリストの取得
+		if (GUILayout.Button("PhotonNetwork.playerList"))
+		{
+			Debug.Log("[Parameters]: PhotonNetwork.playerList");
+			log += "[Parameters]: PhotonNetwork.playerList\n";
 
-            PhotonPlayer[] playerList = PhotonNetwork.playerList;
-            foreach (PhotonPlayer player in playerList)
-            {
-                Debug.Log("Name: " + player.name + " ,isMasterClient: " + player.isMasterClient.ToString());
-                log += "Name: " + player.name + " ,isMasterClient: " + player.isMasterClient.ToString() + "\n";
-            }
-        }
+			PhotonPlayer[] playerList = PhotonNetwork.playerList;
+			foreach (PhotonPlayer player in playerList)
+			{
+				Debug.Log("Name: " + player.name + " ,isMasterClient: " + player.isMasterClient.ToString());
+				log += "Name: " + player.name + " ,isMasterClient: " + player.isMasterClient.ToString() + "\n";
+			}
+		}
 		GUILayout.EndHorizontal();
 
 		// カスタムプロパティ
@@ -481,13 +508,13 @@ public class PhotonManager : Photon.MonoBehaviour
 		if (GUILayout.Button ("ClearLog")) {
 			log = "";
 		}
-        
+
 		GUILayout.EndArea();
 
 		GUILayout.BeginArea(new Rect(450, 0, 350, 800));
-        GUILayout.Label(log);	
-        GUILayout.EndArea();
-    }
+		GUILayout.Label(log);    
+		GUILayout.EndArea();
+	}
 
 	/// <summary>
 	/// RPCのパラメータを表示するためのメソッド
